@@ -7,8 +7,7 @@
         <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Gestion des cartes</h1>
-                <p class="mt-1 text-gray-600">Création et suivi des cartes selon la table <span
-                        class="font-semibold">carte</span>.</p>
+                <p class="mt-1 text-gray-600">Création et gestion de vos cartes.</p>
             </div>
             <button @click="showCreate = true"
                 class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 transition-colors shadow-md hover:shadow-lg">
@@ -35,24 +34,109 @@
         @endif
 
         <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-4">
-            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                <p class="text-sm text-gray-500">Total cartes</p>
-                <p class="mt-1 text-3xl font-bold text-gray-900">{{ $cartes->count() }}</p>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Total Cartes</p>
+                        <p class="mt-2 text-3xl font-bold text-gray-900">{{ $cartes->count() }}</p>
+                        <div class="flex items-center gap-1 mt-2">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                            </svg>
+                            <span class="text-sm text-green-600 font-medium">+12%</span>
+                            <span class="text-sm text-gray-500">ce mois</span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                <p class="text-sm text-gray-500">Enregistrées</p>
-                <p class="mt-1 text-3xl font-bold text-slate-700">
-                    {{ $cartes->where('statut_carte', 'ENREGISTREE')->count() }}</p>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Enregistrées</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-700">
+                            {{ $cartes->where('statut_carte', 'ENREGISTREE')->count() }}</p>
+                        <div class="mt-2">
+                            <span
+                                class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                    <path fill-rule="evenodd"
+                                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                En attente
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                <p class="text-sm text-gray-500">Actives</p>
-                <p class="mt-1 text-3xl font-bold text-emerald-700">{{ $cartes->where('statut_carte', 'ACTIVE')->count() }}
-                </p>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Actives</p>
+                        <p class="mt-2 text-3xl font-bold text-emerald-700">
+                            {{ $cartes->where('statut_carte', 'ACTIVE')->count() }}</p>
+                        <div class="mt-2">
+                            <span
+                                class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                En service
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                <p class="text-sm text-gray-500">Bloquées</p>
-                <p class="mt-1 text-3xl font-bold text-amber-700">{{ $cartes->where('statut_carte', 'BLOQUEE')->count() }}
-                </p>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Bloquées</p>
+                        <p class="mt-2 text-3xl font-bold text-amber-700">
+                            {{ $cartes->where('statut_carte', 'BLOQUEE')->count() }}</p>
+                        <div class="mt-2">
+                            <span
+                                class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Accès restreint
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -61,11 +145,12 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">ID
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">#
                             </th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
                                 Numéro</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Type
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                Type
                             </th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
                                 Banque</th>
@@ -82,7 +167,7 @@
                     <tbody class="divide-y divide-gray-100 bg-white">
                         @forelse ($cartes as $carte)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 text-sm text-gray-800">{{ $carte->id_carte }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-800">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-3 font-mono text-sm text-gray-900">{{ $carte->numero_carte }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-700">{{ $carte->typeCarte->nom_type_carte ?? '-' }}
                                 </td>
@@ -120,7 +205,8 @@
                                             })"
                                             class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
                                             title="Voir détails">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -141,21 +227,23 @@
                                             })"
                                             class="p-2 text-amber-600 hover:bg-amber-100 rounded-lg transition-colors"
                                             title="Modifier">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                                 </path>
                                             </svg>
                                         </button>
 
-                                        <form action="{{ route('admin.cartes.destroy', $carte->id_carte) }}" method="POST"
-                                            onsubmit="return confirm('Supprimer cette carte ?');">
+                                        <form action="{{ route('admin.cartes.destroy', $carte->id_carte) }}"
+                                            method="POST" onsubmit="return confirm('Supprimer cette carte ?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
                                                 class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
                                                 title="Supprimer">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                     </path>
@@ -301,14 +389,17 @@
         <div x-show="showView" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="display:none;">
             <div class="flex items-center justify-center min-h-screen px-4 py-8">
                 <div @click="showView = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
-                <div @click.away="showView = false" class="relative w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-xl">
+                <div @click.away="showView = false"
+                    class="relative w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-xl">
                     <div class="bg-blue-800 px-6 py-4 flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-white">Détail de la carte</h3>
-                        <button type="button" @click="showView = false" class="text-white hover:text-gray-300">✕</button>
+                        <button type="button" @click="showView = false"
+                            class="text-white hover:text-gray-300">✕</button>
                     </div>
                     <div class="p-6 space-y-3 text-sm">
                         <p><span class="font-semibold">ID:</span> <span x-text="viewCard.id"></span></p>
-                        <p><span class="font-semibold">Numéro:</span> <span class="font-mono" x-text="viewCard.numero"></span></p>
+                        <p><span class="font-semibold">Numéro:</span> <span class="font-mono"
+                                x-text="viewCard.numero"></span></p>
                         <p><span class="font-semibold">Type:</span> <span x-text="viewCard.type"></span></p>
                         <p><span class="font-semibold">Banque:</span> <span x-text="viewCard.banque"></span></p>
                         <p><span class="font-semibold">Grossiste:</span> <span x-text="viewCard.grossiste"></span></p>
@@ -322,10 +413,12 @@
         <div x-show="showEdit" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="display:none;">
             <div class="flex items-center justify-center min-h-screen px-4 py-8">
                 <div @click="showEdit = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
-                <div @click.away="showEdit = false" class="relative w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
+                <div @click.away="showEdit = false"
+                    class="relative w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
                     <div class="bg-blue-800 px-6 py-4 flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-white">Modifier la carte</h3>
-                        <button type="button" @click="showEdit = false" class="text-white hover:text-gray-300">✕</button>
+                        <button type="button" @click="showEdit = false"
+                            class="text-white hover:text-gray-300">✕</button>
                     </div>
 
                     <form :action="editAction" method="POST" class="p-6 space-y-4">
@@ -334,7 +427,8 @@
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <div class="md:col-span-2">
                                 <label class="mb-1 block text-sm font-semibold text-gray-700">Numéro de carte</label>
-                                <input type="text" name="numero_carte" x-model="editCard.numero_carte" required maxlength="20"
+                                <input type="text" name="numero_carte" x-model="editCard.numero_carte" required
+                                    maxlength="20"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg uppercase font-mono tracking-wide focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                             </div>
                             <div>
@@ -351,7 +445,9 @@
                                 <select name="id_banque" x-model="editCard.id_banque" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                                     @foreach ($banques as $banque)
-                                        <option value="{{ $banque->id_banque }}">{{ $banque->nom_banque }} ({{ $banque->code_banque }})</option>
+                                        <option value="{{ $banque->id_banque }}">{{ $banque->nom_banque }}
+                                            ({{ $banque->code_banque }})
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -360,7 +456,8 @@
                                 <select name="id_grossiste" x-model="editCard.id_grossiste" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                                     @foreach ($grossistes as $grossiste)
-                                        <option value="{{ $grossiste->id_user_detail }}">{{ $grossiste->raison_sociale }}</option>
+                                        <option value="{{ $grossiste->id_user_detail }}">{{ $grossiste->raison_sociale }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

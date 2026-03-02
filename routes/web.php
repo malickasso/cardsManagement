@@ -292,6 +292,74 @@ Route::prefix('grossiste')->name('grossiste.')->middleware(['auth:web', 'user.ty
         return view('grossiste.dotation');
     })->name('dotation');
 
+    // Gestion des Cartes
+    Route::prefix('cartes')->name('cartes.')->group(function () {
+        Route::get('/', function () {
+            $grossiste = Auth::user();
+
+            $typesCartes = TypeCarte::where('cree_par_admin', $grossiste->cree_par_admin)
+                ->where('statut', 'ACTIF')
+                ->orderBy('id_type_carte', 'asc')
+                ->get();
+
+            $banques = Banque::where('cree_par_admin', $grossiste->cree_par_admin)
+                ->where('statut', 'ACTIF')
+                ->orderBy('id_banque', 'asc')
+                ->get();
+
+            $cartes = Carte::with([
+                'typeCarte:id_type_carte,nom_type_carte',
+                'banque:id_banque,nom_banque',
+            ])
+                ->where('id_grossiste', $grossiste->id_user_detail)
+                ->orderBy('id_carte', 'desc')
+                ->get();
+
+            $stats = [
+                'total' => $cartes->count(),
+                'enregistrees' => $cartes->where('statut_carte', 'ENREGISTREE')->count(),
+                'actives' => $cartes->where('statut_carte', 'ACTIVE')->count(),
+                'bloquees' => $cartes->where('statut_carte', 'BLOQUEE')->count(),
+            ];
+
+            return view('grossiste.cartes', compact('typesCartes', 'banques', 'cartes', 'stats'));
+        })->name('index');
+
+        Route::post('/', function (\Illuminate\Http\Request $request) {
+            $grossiste = Auth::user();
+
+            $validated = $request->validate([
+                'numero_carte' => ['required', 'string', 'max:20', 'unique:carte,numero_carte'],
+                'id_type_carte' => ['required', 'integer'],
+                'id_banque' => ['required', 'integer', 'exists:banque,id_banque'],
+                'date_expiration' => ['required', 'date', 'after_or_equal:today'],
+                'statut_carte' => ['nullable', Rule::in(['ENREGISTREE', 'ACTIVE', 'BLOQUEE', 'EXPIREE', 'ANNULEE'])],
+            ]);
+
+            TypeCarte::where('id_type_carte', $validated['id_type_carte'])
+                ->where('cree_par_admin', $grossiste->cree_par_admin)
+                ->where('statut', 'ACTIF')
+                ->firstOrFail();
+
+            Banque::where('id_banque', $validated['id_banque'])
+                ->where('cree_par_admin', $grossiste->cree_par_admin)
+                ->where('statut', 'ACTIF')
+                ->firstOrFail();
+
+            Carte::create([
+                'cree_par_admin' => $grossiste->cree_par_admin,
+                'numero_carte' => strtoupper(trim($validated['numero_carte'])),
+                'id_type_carte' => $validated['id_type_carte'],
+                'id_banque' => $validated['id_banque'],
+                'id_grossiste' => $grossiste->id_user_detail,
+                'date_expiration' => $validated['date_expiration'],
+                'statut_carte' => $validated['statut_carte'] ?? 'ENREGISTREE',
+            ]);
+
+            return redirect()->route('grossiste.cartes.index')->with('success', 'Carte créée avec succès.');
+        })->name('store');
+    });
+
     // Gestion des Partenaires
     Route::prefix('partenaires')->name('partenaires.')->group(function () {
         Route::get('/', function () {

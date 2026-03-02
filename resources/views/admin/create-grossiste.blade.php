@@ -11,13 +11,85 @@
                     <h1 class="text-3xl font-bold text-gray-900">Gestion des Grossistes</h1>
                     <p class="text-gray-600 mt-1">Gérez et administrez tous vos grossistes en un seul endroit</p>
                 </div>
-                <button
-                    @click="openModal('add')"
-                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 transition-colors shadow-md hover:shadow-lg"
-                >
+                <button @click="openModal('add')"
+                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 transition-colors shadow-md hover:shadow-lg">
                     <i data-lucide="plus" class="w-5 h-5"></i>
                     Ajouter un Grossiste
                 </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3" x-show="!loading">
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Total Grossistes</p>
+                        <p class="mt-2 text-3xl font-bold text-gray-900" x-text="grossistes.length"></p>
+                        <p class="mt-2 text-xs text-gray-400">Tous les grossistes enregistrés</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Actifs</p>
+                        <p class="mt-2 text-3xl font-bold text-emerald-700"
+                            x-text="grossistes.filter(g => g.statut === 'Actif' || g.statut === 'ACTIF' || g.statut_general === 'ACTIF').length">
+                        </p>
+                        <div class="mt-2">
+                            <span
+                                class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Opérationnels
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Inactifs</p>
+                        <p class="mt-2 text-3xl font-bold text-red-600"
+                            x-text="grossistes.filter(g => g.statut === 'Inactif' || g.statut === 'INACTIF' || g.statut_general === 'INACTIF').length">
+                        </p>
+                        <div class="mt-2">
+                            <span
+                                class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Désactivés
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -30,32 +102,23 @@
         <!-- Search Bar -->
         <div class="mb-6" x-show="!loading">
             <div class="relative max-w-md">
-                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></i>
-                <input
-                    type="text"
-                    x-model="searchQuery"
-                    placeholder="Rechercher par nom ou raison sociale..."
-                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                >
+                <i data-lucide="search"
+                    class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                <input type="text" x-model="searchQuery" placeholder="Rechercher par nom ou raison sociale..."
+                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
             </div>
         </div>
 
         <!-- Success Message -->
-        <div
-            x-show="successMessage"
-            x-transition
-            class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3"
-        >
+        <div x-show="successMessage" x-transition
+            class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
             <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
             <p class="text-green-800 font-medium" x-text="successMessage"></p>
         </div>
 
         <!-- Error Message -->
-        <div
-            x-show="errorMessage"
-            x-transition
-            class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3"
-        >
+        <div x-show="errorMessage" x-transition
+            class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
             <i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>
             <p class="text-red-800 font-medium" x-text="errorMessage"></p>
         </div>
@@ -66,22 +129,35 @@
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Raison Sociale</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Propriétaire</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IFU</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">RCCM</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Téléphone</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Raison Sociale</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Propriétaire</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IFU
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                RCCM</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Email</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Téléphone</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Statut</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <template x-for="grossiste in filteredGrossistes" :key="grossiste.id">
+                        <template x-for="(grossiste, index) in filteredGrossistes" :key="grossiste.id">
                             <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900" x-text="grossiste.raison_sociale"></td>
+                                <td class="px-6 py-4 text-sm text-gray-500" x-text="index + 1"></td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900" x-text="grossiste.raison_sociale">
+                                </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">
-                                    <span x-text="(grossiste.nom_proprietaire || grossiste.nom) + ' ' + (grossiste.prenom_proprietaire || grossiste.prenom)"></span>
+                                    <span
+                                        x-text="(grossiste.nom_proprietaire || grossiste.nom) + ' ' + (grossiste.prenom_proprietaire || grossiste.prenom)"></span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700" x-text="grossiste.ifu"></td>
                                 <td class="px-6 py-4 text-sm text-gray-700" x-text="grossiste.rccm"></td>
@@ -89,39 +165,44 @@
                                 <td class="px-6 py-4 text-sm text-gray-700" x-text="grossiste.telephone || 'N/A'"></td>
                                 <td class="px-6 py-4">
                                     <span
-                                        :class="(grossiste.statut === 'Actif' || grossiste.statut === 'ACTIF' || grossiste.statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                                        :class="(grossiste.statut === 'Actif' || grossiste.statut === 'ACTIF' ||
+                                            grossiste.statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' :
+                                        'bg-gray-100 text-gray-800'"
                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
-                                        x-text="grossiste.statut_general || grossiste.statut"
-                                    ></span>
+                                        x-text="grossiste.statut_general || grossiste.statut"></span>
                                 </td>
                                 <td class="px-1 py-4">
                                     <div class="flex items-center gap-2">
-                                        <button
-                                            @click="viewGrossiste(grossiste)"
+                                        <button @click="viewGrossiste(grossiste)"
                                             class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                                            title="Voir détails"
-                                        >
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            title="Voir détails">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                </path>
                                             </svg>
                                         </button>
-                                        <button
-                                            @click="openModal('edit', grossiste)"
+                                        <button @click="openModal('edit', grossiste)"
                                             class="p-2 text-amber-600 hover:bg-amber-100 rounded-lg transition-colors"
-                                            title="Modifier"
-                                        >
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            title="Modifier">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                         </button>
-                                        <button
-                                            @click="deleteGrossiste(grossiste)"
+                                        <button @click="deleteGrossiste(grossiste)"
                                             class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                                            title="Supprimer"
-                                        >
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            title="Supprimer">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
                                             </svg>
                                         </button>
                                     </div>
@@ -145,13 +226,16 @@
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex-1">
                             <h3 class="font-semibold text-gray-900 text-lg" x-text="grossiste.raison_sociale"></h3>
-                            <p class="text-sm text-gray-600" x-text="(grossiste.nom_proprietaire || grossiste.nom) + ' ' + (grossiste.prenom_proprietaire || grossiste.prenom)"></p>
+                            <p class="text-sm text-gray-600"
+                                x-text="(grossiste.nom_proprietaire || grossiste.nom) + ' ' + (grossiste.prenom_proprietaire || grossiste.prenom)">
+                            </p>
                         </div>
                         <span
-                            :class="(grossiste.statut === 'Actif' || grossiste.statut === 'ACTIF' || grossiste.statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                            :class="(grossiste.statut === 'Actif' || grossiste.statut === 'ACTIF' || grossiste
+                                .statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' :
+                            'bg-gray-100 text-gray-800'"
                             class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold"
-                            x-text="grossiste.statut_general || grossiste.statut"
-                        ></span>
+                            x-text="grossiste.statut_general || grossiste.statut"></span>
                     </div>
 
                     <div class="space-y-2 mb-4">
@@ -176,61 +260,50 @@
                     </div>
 
                     <div class="flex items-center gap-2 pt-3 border-t border-gray-200">
-                        <button
-                            @click="viewGrossiste(grossiste)"
-                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                        >
+                        <button @click="viewGrossiste(grossiste)"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                             <i data-lucide="eye" class="w-4 h-4"></i>
                             Voir
                         </button>
-                        <button
-                            @click="openModal('edit', grossiste)"
-                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors"
-                        >
+                        <button @click="openModal('edit', grossiste)"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                             Modifier
                         </button>
-                        <button
-                            @click="deleteGrossiste(grossiste)"
-                            class="px-4 py-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-                        >
+                        <button @click="deleteGrossiste(grossiste)"
+                            class="px-4 py-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
             </template>
-            <div x-show="filteredGrossistes.length === 0" class="bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
+            <div x-show="filteredGrossistes.length === 0"
+                class="bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
                 Aucun grossiste trouvé
             </div>
         </div>
 
         <!-- Modal (Add/Edit) -->
-        <div
-            x-show="showModal"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-50 overflow-y-auto"
-            style="display: none;"
-        >
+        <div x-show="showModal" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
                 <div @click="closeModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
 
-                <div
-                    x-transition:enter="transition ease-out duration-300"
+                <div x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                    class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
-                >
+                    class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                     <div class="bg-blue-800 px-6 py-4">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white" x-text="modalMode === 'add' ? 'Ajouter un Grossiste' : 'Modifier le Grossiste'"></h3>
-                            <button @click="closeModal" class="text-white hover:text-gray-300 hover:bg-blue-700 rounded-lg p-1 transition-colors">
+                            <h3 class="text-xl font-semibold text-white"
+                                x-text="modalMode === 'add' ? 'Ajouter un Grossiste' : 'Modifier le Grossiste'"></h3>
+                            <button @click="closeModal"
+                                class="text-white hover:text-gray-300 hover:bg-blue-700 rounded-lg p-1 transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>
@@ -243,15 +316,11 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Raison Sociale <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.raison_sociale"
-                                    maxlength="150"
-                                    required
+                                <input type="text" x-model="formData.raison_sociale" maxlength="150" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.raison_sociale ? 'border-red-500' : ''"
-                                >
-                                <p x-show="errors.raison_sociale" class="text-red-500 text-xs mt-1" x-text="errors.raison_sociale"></p>
+                                    :class="errors.raison_sociale ? 'border-red-500' : ''">
+                                <p x-show="errors.raison_sociale" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.raison_sociale"></p>
                             </div>
 
                             <!-- Nom -->
@@ -259,14 +328,9 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Nom du Propriétaire <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.nom"
-                                    maxlength="100"
-                                    required
+                                <input type="text" x-model="formData.nom" maxlength="100" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.nom ? 'border-red-500' : ''"
-                                >
+                                    :class="errors.nom ? 'border-red-500' : ''">
                                 <p x-show="errors.nom" class="text-red-500 text-xs mt-1" x-text="errors.nom"></p>
                             </div>
 
@@ -275,14 +339,9 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Prénom du Propriétaire <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.prenom"
-                                    maxlength="100"
-                                    required
+                                <input type="text" x-model="formData.prenom" maxlength="100" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.prenom ? 'border-red-500' : ''"
-                                >
+                                    :class="errors.prenom ? 'border-red-500' : ''">
                                 <p x-show="errors.prenom" class="text-red-500 text-xs mt-1" x-text="errors.prenom"></p>
                             </div>
 
@@ -291,15 +350,11 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     IFU <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.ifu"
-                                    maxlength="50"
-                                    required
+                                <input type="text" x-model="formData.ifu" maxlength="50" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.ifu ? 'border-red-500' : ''"
-                                >
-                                <p x-show="errors.ifu" class="text-red-500 text-xs mt-1" x-text="errors.ifu ? errors.ifu[0] : ''"></p>
+                                    :class="errors.ifu ? 'border-red-500' : ''">
+                                <p x-show="errors.ifu" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.ifu ? errors.ifu[0] : ''"></p>
                             </div>
 
                             <!-- RCCM -->
@@ -307,15 +362,11 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     RCCM <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.rccm"
-                                    maxlength="50"
-                                    required
+                                <input type="text" x-model="formData.rccm" maxlength="50" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.rccm ? 'border-red-500' : ''"
-                                >
-                                <p x-show="errors.rccm" class="text-red-500 text-xs mt-1" x-text="errors.rccm ? errors.rccm[0] : ''"></p>
+                                    :class="errors.rccm ? 'border-red-500' : ''">
+                                <p x-show="errors.rccm" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.rccm ? errors.rccm[0] : ''"></p>
                             </div>
 
                             <!-- Email -->
@@ -323,15 +374,11 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Email <span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="email"
-                                    x-model="formData.email"
-                                    maxlength="150"
-                                    required
+                                <input type="email" x-model="formData.email" maxlength="150" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.email ? 'border-red-500' : ''"
-                                >
-                                <p x-show="errors.email" class="text-red-500 text-xs mt-1" x-text="errors.email ? errors.email[0] : ''"></p>
+                                    :class="errors.email ? 'border-red-500' : ''">
+                                <p x-show="errors.email" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.email ? errors.email[0] : ''"></p>
                             </div>
 
                             <!-- Téléphone -->
@@ -339,12 +386,8 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Téléphone
                                 </label>
-                                <input
-                                    type="tel"
-                                    x-model="formData.telephone"
-                                    maxlength="30"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                >
+                                <input type="tel" x-model="formData.telephone" maxlength="30"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                             </div>
 
                             <!-- Quartier -->
@@ -352,12 +395,8 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Quartier
                                 </label>
-                                <input
-                                    type="text"
-                                    x-model="formData.quartier"
-                                    maxlength="100"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                >
+                                <input type="text" x-model="formData.quartier" maxlength="100"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                             </div>
 
                             <!-- Mot de Passe -->
@@ -366,47 +405,48 @@
                                     Mot de Passe <span x-show="modalMode === 'add'" class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input
-                                        :type="showPassword ? 'text' : 'password'"
-                                        x-model="formData.password"
-                                        minlength="8"
-                                        :required="modalMode === 'add'"
+                                    <input :type="showPassword ? 'text' : 'password'" x-model="formData.password"
+                                        minlength="8" :required="modalMode === 'add'"
                                         class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                        :class="errors.password ? 'border-red-500' : ''"
-                                    >
-                                    <button
-                                        type="button"
-                                        @click="showPassword = !showPassword"
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                    >
-                                        <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        :class="errors.password ? 'border-red-500' : ''">
+                                    <button type="button" @click="showPassword = !showPassword"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                        <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
                                         </svg>
-                                        <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                        <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" style="display: none;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                            </path>
                                         </svg>
                                     </button>
                                 </div>
-                                <p x-show="errors.password" class="text-red-500 text-xs mt-1" x-text="errors.password ? errors.password[0] : ''"></p>
-                                <p x-show="modalMode === 'edit'" class="text-gray-500 text-xs mt-1">Laissez vide pour conserver le mot de passe actuel</p>
+                                <p x-show="errors.password" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.password ? errors.password[0] : ''"></p>
+                                <p x-show="modalMode === 'edit'" class="text-gray-500 text-xs mt-1">Laissez vide pour
+                                    conserver le mot de passe actuel</p>
                             </div>
 
                             <!-- Confirmation Mot de Passe -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Confirmer le Mot de Passe <span x-show="modalMode === 'add'" class="text-red-500">*</span>
+                                    Confirmer le Mot de Passe <span x-show="modalMode === 'add'"
+                                        class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="password"
-                                    x-model="formData.password_confirmation"
-                                    minlength="8"
+                                <input type="password" x-model="formData.password_confirmation" minlength="8"
                                     :required="modalMode === 'add'"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                    :class="errors.password_confirmation ? 'border-red-500' : ''"
-                                >
-                                <p x-show="errors.password_confirmation" class="text-red-500 text-xs mt-1" x-text="errors.password_confirmation ? errors.password_confirmation[0] : ''"></p>
-                                <p x-show="formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation" class="text-red-500 text-xs mt-1">Les mots de passe ne correspondent pas</p>
+                                    :class="errors.password_confirmation ? 'border-red-500' : ''">
+                                <p x-show="errors.password_confirmation" class="text-red-500 text-xs mt-1"
+                                    x-text="errors.password_confirmation ? errors.password_confirmation[0] : ''"></p>
+                                <p x-show="formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation"
+                                    class="text-red-500 text-xs mt-1">Les mots de passe ne correspondent pas</p>
                             </div>
 
                             <!-- Statut -->
@@ -414,11 +454,8 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Statut <span class="text-red-500">*</span>
                                 </label>
-                                <select
-                                    x-model="formData.statut"
-                                    required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                >
+                                <select x-model="formData.statut" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
                                     <option value="Actif">Actif</option>
                                     <option value="Inactif">Inactif</option>
                                 </select>
@@ -429,29 +466,19 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     Description
                                 </label>
-                                <textarea
-                                    x-model="formData.description"
-                                    rows="3"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent resize-none"
-                                ></textarea>
+                                <textarea x-model="formData.description" rows="3"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent resize-none"></textarea>
                             </div>
                         </div>
 
                         <div class="flex gap-3 mt-6 pt-6 border-t border-gray-200">
-                            <button
-                                type="button"
-                                @click="closeModal"
-                                :disabled="submitting"
-                                class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
-                            >
+                            <button type="button" @click="closeModal" :disabled="submitting"
+                                class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50">
                                 Annuler
                             </button>
-                            <button
-                                type="submit"
-                                :disabled="submitting"
+                            <button type="submit" :disabled="submitting"
                                 :class="submitting ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-900'"
-                                class="flex-1 px-6 py-3 text-white font-semibold rounded-lg transition-colors shadow-md"
-                            >
+                                class="flex-1 px-6 py-3 text-white font-semibold rounded-lg transition-colors shadow-md">
                                 <span x-show="!submitting">Soumettre</span>
                                 <span x-show="submitting">Enregistrement...</span>
                             </button>
@@ -462,22 +489,21 @@
         </div>
 
         <!-- View Details Modal -->
-        <div
-            x-show="showViewModal"
-            x-transition
-            class="fixed inset-0 z-50 overflow-y-auto"
-            style="display: none;"
-        >
+        <div x-show="showViewModal" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                <div @click="showViewModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+                <div @click="showViewModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity">
+                </div>
 
-                <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div
+                    class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div class="bg-blue-800 px-6 py-4">
                         <div class="flex items-center justify-between">
                             <h3 class="text-xl font-semibold text-white">Détails du Grossiste</h3>
-                            <button @click="showViewModal = false" class="text-white hover:text-gray-300 hover:bg-blue-700 rounded-lg p-1 transition-colors">
+                            <button @click="showViewModal = false"
+                                class="text-white hover:text-gray-300 hover:bg-blue-700 rounded-lg p-1 transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>
@@ -491,11 +517,13 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <p class="text-sm font-semibold text-gray-500">Nom</p>
-                                <p class="text-gray-900" x-text="viewingGrossiste?.nom_proprietaire || viewingGrossiste?.nom"></p>
+                                <p class="text-gray-900"
+                                    x-text="viewingGrossiste?.nom_proprietaire || viewingGrossiste?.nom"></p>
                             </div>
                             <div>
                                 <p class="text-sm font-semibold text-gray-500">Prénom</p>
-                                <p class="text-gray-900" x-text="viewingGrossiste?.prenom_proprietaire || viewingGrossiste?.prenom"></p>
+                                <p class="text-gray-900"
+                                    x-text="viewingGrossiste?.prenom_proprietaire || viewingGrossiste?.prenom"></p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -527,10 +555,11 @@
                         <div>
                             <p class="text-sm font-semibold text-gray-500">Statut</p>
                             <span
-                                :class="(viewingGrossiste?.statut === 'Actif' || viewingGrossiste?.statut === 'ACTIF' || viewingGrossiste?.statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                                :class="(viewingGrossiste?.statut === 'Actif' || viewingGrossiste?.statut === 'ACTIF' ||
+                                    viewingGrossiste?.statut_general === 'ACTIF') ? 'bg-green-100 text-green-800' :
+                                'bg-gray-100 text-gray-800'"
                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
-                                x-text="viewingGrossiste?.statut_general || viewingGrossiste?.statut"
-                            ></span>
+                                x-text="viewingGrossiste?.statut_general || viewingGrossiste?.statut"></span>
                         </div>
                     </div>
                 </div>
@@ -538,21 +567,22 @@
         </div>
 
         <!-- Delete Confirmation Modal -->
-        <div
-            x-show="showDeleteModal"
-            x-transition
-            class="fixed inset-0 z-50 overflow-y-auto"
-            style="display: none;"
-        >
+        <div x-show="showDeleteModal" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                <div @click="showDeleteModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+                <div @click="showDeleteModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity">
+                </div>
 
-                <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div
+                    class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div class="bg-white px-6 py-4">
                         <div class="flex items-start">
-                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            <div
+                                class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                    </path>
                                 </svg>
                             </div>
                             <div class="mt-0 ml-4 text-left flex-1">
@@ -561,32 +591,26 @@
                                     <p class="text-sm text-gray-600">
                                         Êtes-vous sûr de vouloir supprimer ce grossiste ? Cette action est irréversible.
                                     </p>
-                                    <p class="text-sm text-gray-900 font-semibold mt-2" x-show="deletingGrossiste" x-text="deletingGrossiste?.raison_sociale"></p>
+                                    <p class="text-sm text-gray-900 font-semibold mt-2" x-show="deletingGrossiste"
+                                        x-text="deletingGrossiste?.raison_sociale"></p>
                                 </div>
                             </div>
                             <button @click="showDeleteModal = false" class="text-gray-400 hover:text-gray-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>
                     </div>
 
                     <div class="bg-gray-50 px-6 py-4 flex gap-3">
-                        <button
-                            @click="showDeleteModal = false"
-                            type="button"
-                            :disabled="deleting"
-                            class="flex-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-                        >
+                        <button @click="showDeleteModal = false" type="button" :disabled="deleting"
+                            class="flex-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
                             Annuler
                         </button>
-                        <button
-                            @click="confirmDelete"
-                            type="button"
-                            :disabled="deleting"
-                            class="flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-                        >
+                        <button @click="confirmDelete" type="button" :disabled="deleting"
+                            class="flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50">
                             <span x-show="!deleting">Supprimer</span>
                             <span x-show="deleting">Suppression...</span>
                         </button>
@@ -639,31 +663,32 @@
                         const nom = g.nom_proprietaire || g.nom || '';
                         const prenom = g.prenom_proprietaire || g.prenom || '';
                         return g.raison_sociale.toLowerCase().includes(query) ||
-                               nom.toLowerCase().includes(query) ||
-                               prenom.toLowerCase().includes(query);
+                            nom.toLowerCase().includes(query) ||
+                            prenom.toLowerCase().includes(query);
                     });
                 },
 
                 get isFormValid() {
                     const baseValid = this.formData.raison_sociale &&
-                           this.formData.nom &&
-                           this.formData.prenom &&
-                           this.formData.ifu &&
-                           this.formData.rccm &&
-                           this.formData.email;
+                        this.formData.nom &&
+                        this.formData.prenom &&
+                        this.formData.ifu &&
+                        this.formData.rccm &&
+                        this.formData.email;
 
                     if (this.modalMode === 'edit') {
                         return baseValid;
                     }
 
-                    return baseValid && this.formData.password && this.formData.password_confirmation && this.formData.password === this.formData.password_confirmation;
+                    return baseValid && this.formData.password && this.formData.password_confirmation && this.formData
+                        .password === this.formData.password_confirmation;
                 },
 
                 async loadGrossistes() {
                     this.loading = true;
                     try {
                         console.log('Chargement des grossistes...');
-                        const response = await fetch('{{ route("admin.grossistes.data") }}', {
+                        const response = await fetch('{{ route('admin.grossistes.data') }}', {
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Accept': 'application/json'
@@ -720,7 +745,8 @@
                             quartier: grossiste.quartier,
                             description: grossiste.description,
                             password: '',
-                            statut: (grossiste.statut_general || grossiste.statut || 'ACTIF').charAt(0).toUpperCase() + (grossiste.statut_general || grossiste.statut || 'actif').slice(1).toLowerCase()
+                            statut: (grossiste.statut_general || grossiste.statut || 'ACTIF').charAt(0).toUpperCase() +
+                                (grossiste.statut_general || grossiste.statut || 'actif').slice(1).toLowerCase()
                         };
                     }
 
@@ -761,9 +787,9 @@
                     this.errors = {};
 
                     try {
-                        const url = this.modalMode === 'add'
-                            ? '{{ route("admin.grossistes.store") }}'
-                            : `{{ url('/admin/grossistes') }}/${this.formData.id}`;
+                        const url = this.modalMode === 'add' ?
+                            '{{ route('admin.grossistes.store') }}' :
+                            `{{ url('/admin/grossistes') }}/${this.formData.id}`;
 
                         const method = this.modalMode === 'add' ? 'POST' : 'PUT';
 
@@ -818,7 +844,8 @@
                     if (!this.deletingGrossiste) return;
 
                     this.deleting = true;
-                    const id = this.deletingGrossiste.id_grossiste || this.deletingGrossiste.id_user_detail || this.deletingGrossiste.id;
+                    const id = this.deletingGrossiste.id_grossiste || this.deletingGrossiste.id_user_detail || this
+                        .deletingGrossiste.id;
 
                     try {
                         const response = await fetch(`{{ url('/admin/grossistes') }}/${id}`, {
