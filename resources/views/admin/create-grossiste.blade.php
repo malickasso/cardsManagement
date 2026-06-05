@@ -150,7 +150,8 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <template x-for="(grossiste, index) in filteredGrossistes" :key="grossiste.id">
+                        <template x-for="(grossiste, index) in filteredGrossistes"
+                            :key="grossiste?.id_grossiste || grossiste?.id_user_detail || grossiste?.id || `g-${index}`">
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm text-gray-500" x-text="index + 1"></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900" x-text="grossiste.raison_sociale">
@@ -221,7 +222,8 @@
 
         <!-- Mobile Card View -->
         <div class="md:hidden space-y-4" x-show="!loading">
-            <template x-for="grossiste in filteredGrossistes" :key="grossiste.id">
+            <template x-for="(grossiste, index) in filteredGrossistes"
+                :key="grossiste?.id_grossiste || grossiste?.id_user_detail || grossiste?.id || `m-${index}`">
                 <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex-1">
@@ -656,15 +658,16 @@
                 errors: {},
 
                 get filteredGrossistes() {
-                    console.log('filteredGrossistes appelé, grossistes:', this.grossistes);
-                    if (!this.searchQuery) return this.grossistes;
+                    const list = Array.isArray(this.grossistes) ? this.grossistes.filter(Boolean) : [];
+                    if (!this.searchQuery) return list;
+
                     const query = this.searchQuery.toLowerCase();
-                    return this.grossistes.filter(g => {
-                        const nom = g.nom_proprietaire || g.nom || '';
-                        const prenom = g.prenom_proprietaire || g.prenom || '';
-                        return g.raison_sociale.toLowerCase().includes(query) ||
-                            nom.toLowerCase().includes(query) ||
-                            prenom.toLowerCase().includes(query);
+                    return list.filter(g => {
+                        const raisonSociale = (g.raison_sociale || '').toLowerCase();
+                        const nom = (g.nom_proprietaire || g.nom || '').toLowerCase();
+                        const prenom = (g.prenom_proprietaire || g.prenom || '').toLowerCase();
+
+                        return raisonSociale.includes(query) || nom.includes(query) || prenom.includes(query);
                     });
                 },
 

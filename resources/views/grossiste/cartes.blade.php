@@ -57,12 +57,19 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">ID</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Numéro</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Type</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Banque</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Expiration</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Statut</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">ID
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                Numéro</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Type
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                Banque</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                Expiration</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                Statut</th>
+
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
@@ -70,9 +77,11 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-3 text-sm text-gray-800">{{ $carte->id_carte }}</td>
                                 <td class="px-4 py-3 font-mono text-sm text-gray-900">{{ $carte->numero_carte }}</td>
-                                <td class="px-4 py-3 text-sm text-gray-700">{{ $carte->typeCarte->nom_type_carte ?? '-' }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{{ $carte->typeCarte->nom_type_carte ?? '-' }}
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-700">{{ $carte->banque->nom_banque ?? '-' }}</td>
-                                <td class="px-4 py-3 text-sm text-gray-700">{{ \Carbon\Carbon::parse($carte->date_expiration)->format('d/m/Y') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">
+                                    {{ \Carbon\Carbon::parse($carte->date_expiration)->format('d/m/Y') }}</td>
                                 <td class="px-4 py-3">
                                     @php
                                         $statusColors = [
@@ -88,6 +97,7 @@
                                         {{ $carte->statut_carte }}
                                     </span>
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
