@@ -11,7 +11,6 @@ class Carte extends Model
 
     protected $fillable = [
         'uuid_carte',
-        'cree_par_admin',
         'numero_carte',
         'id_type_carte',
         'id_banque',
@@ -34,10 +33,5 @@ class Carte extends Model
     public function grossiste()
     {
         return $this->belongsTo(UserDetail::class, 'id_grossiste', 'id_user_detail');
-    }
-
-    public function admin()
-    {
-        return $this->belongsTo(Admin::class, 'cree_par_admin', 'id_admin');
     }
 }

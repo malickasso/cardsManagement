@@ -17,11 +17,7 @@ class GrossisteController extends Controller
     public function getGrossistes(Request $request)
     {
         try {
-            // Récupérer uniquement les grossistes créés par l'admin connecté
-            $adminId = Auth::guard('admin')->id();
-
-            $grossistes = UserDetail::where('cree_par_admin', $adminId)
-                ->where('type_user', 'GROSSISTE')
+            $grossistes = UserDetail::where('type_user', 'GROSSISTE')
                 ->orderBy('date_creation', 'desc')
                 ->get();
 

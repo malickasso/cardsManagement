@@ -43,22 +43,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
 
     // Gestion des Banques
     Route::get('/banques/create', function () {
-        $adminId = Auth::guard('admin')->id();
-        $banques = Banque::where('cree_par_admin', $adminId)
-            ->orderBy('id_banque', 'asc')
-            ->get();
+        $banques = Banque::orderBy('id_banque', 'asc')->get();
         $stats = [
-            'total'   => Banque::where('cree_par_admin', $adminId)->count(),
-            'actif'   => Banque::where('cree_par_admin', $adminId)->where('statut', 'ACTIF')->count(),
-            'inactif' => Banque::where('cree_par_admin', $adminId)->where('statut', 'INACTIF')->count(),
+            'total'   => Banque::count(),
+            'actif'   => Banque::where('statut', 'ACTIF')->count(),
+            'inactif' => Banque::where('statut', 'INACTIF')->count(),
         ];
 
         return view('admin.banques.create', compact('banques', 'stats'));
     })->name('banques.create');
 
     Route::post('/banques', function (\Illuminate\Http\Request $request) {
-        $adminId = Auth::guard('admin')->id();
-
         $validated = $request->validate([
             'nom_banque' => ['required', 'string', 'max:150'],
             'code_banque' => ['required', 'string', 'max:50', 'unique:banque,code_banque'],
@@ -66,7 +61,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
         ]);
 
         Banque::create([
-            'cree_par_admin' => $adminId,
             'nom_banque' => $validated['nom_banque'],
             'code_banque' => strtoupper($validated['code_banque']),
             'statut' => $validated['statut'] ?? 'ACTIF',
@@ -139,18 +133,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
 
     // Gestion des Cartes
     Route::get('/cartes/create', function () {
-        $adminId = Auth::guard('admin')->id();
+        $typesCartes = TypeCarte::orderBy('id_type_carte', 'asc')->get();
 
-        $typesCartes = TypeCarte::where('cree_par_admin', $adminId)
-            ->orderBy('id_type_carte', 'asc')
-            ->get();
-
-        $banques = Banque::where('cree_par_admin', $adminId)
-            ->orderBy('id_banque', 'asc')
-            ->get();
+        $banques = Banque::orderBy('id_banque', 'asc')->get();
 
         $grossistes = UserDetail::where('type_user', 'GROSSISTE')
-            ->where('cree_par_admin', $adminId)
             ->where('statut_general', 'ACTIF')
             ->orderBy('raison_sociale', 'asc')
             ->get();
@@ -160,7 +147,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
             'banque:id_banque,nom_banque',
             'grossiste:id_user_detail,raison_sociale,cree_par_admin',
         ])
-            ->where('cree_par_admin', $adminId)
             ->orderBy('id_carte', 'asc')
             ->get();
 
@@ -168,32 +154,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     })->name('cartes.create');
 
     Route::post('/cartes', function (\Illuminate\Http\Request $request) {
-        $adminId = Auth::guard('admin')->id();
-
         $validated = $request->validate([
             'numero_carte' => ['required', 'string', 'max:20', 'unique:carte,numero_carte'],
-            'id_type_carte' => ['required', 'integer'],
+            'id_type_carte' => ['required', 'integer', 'exists:type_carte,id_type_carte'],
             'id_banque' => ['required', 'integer', 'exists:banque,id_banque'],
             'id_grossiste' => ['required', 'integer', 'exists:users_details,id_user_detail'],
             'date_expiration' => ['required', 'date', 'after_or_equal:today'],
             'statut_carte' => ['nullable', Rule::in(['ENREGISTREE', 'ACTIVE', 'BLOQUEE', 'EXPIREE', 'ANNULEE'])],
         ]);
 
-        TypeCarte::where('id_type_carte', $validated['id_type_carte'])
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
-
-        UserDetail::where('id_user_detail', $validated['id_grossiste'])
-            ->where('type_user', 'GROSSISTE')
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
-
-        Banque::where('id_banque', $validated['id_banque'])
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
-
         Carte::create([
-            'cree_par_admin' => $adminId,
             'numero_carte' => strtoupper(trim($validated['numero_carte'])),
             'id_type_carte' => $validated['id_type_carte'],
             'id_banque' => $validated['id_banque'],
@@ -206,33 +176,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     })->name('cartes.store');
 
     Route::put('/cartes/{id}', function (\Illuminate\Http\Request $request, $id) {
-        $adminId = Auth::guard('admin')->id();
-
-        $carte = Carte::where('id_carte', $id)
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
+        $carte = Carte::where('id_carte', $id)->firstOrFail();
 
         $validated = $request->validate([
             'numero_carte' => ['required', 'string', 'max:20', Rule::unique('carte', 'numero_carte')->ignore($id, 'id_carte')],
-            'id_type_carte' => ['required', 'integer'],
+            'id_type_carte' => ['required', 'integer', 'exists:type_carte,id_type_carte'],
             'id_banque' => ['required', 'integer', 'exists:banque,id_banque'],
             'id_grossiste' => ['required', 'integer', 'exists:users_details,id_user_detail'],
             'date_expiration' => ['required', 'date'],
             'statut_carte' => ['required', Rule::in(['ENREGISTREE', 'ACTIVE', 'BLOQUEE', 'EXPIREE', 'ANNULEE'])],
         ]);
-
-        TypeCarte::where('id_type_carte', $validated['id_type_carte'])
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
-
-        Banque::where('id_banque', $validated['id_banque'])
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
-
-        UserDetail::where('id_user_detail', $validated['id_grossiste'])
-            ->where('type_user', 'GROSSISTE')
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
 
         $carte->update([
             'numero_carte' => strtoupper(trim($validated['numero_carte'])),
@@ -247,11 +200,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     })->name('cartes.update');
 
     Route::delete('/cartes/{id}', function ($id) {
-        $adminId = Auth::guard('admin')->id();
-
-        $carte = Carte::where('id_carte', $id)
-            ->where('cree_par_admin', $adminId)
-            ->firstOrFail();
+        $carte = Carte::where('id_carte', $id)->firstOrFail();
 
         $carte->delete();
 
@@ -302,8 +251,7 @@ Route::prefix('grossiste')->name('grossiste.')->middleware(['auth:web', 'user.ty
                 ->orderBy('id_type_carte', 'asc')
                 ->get();
 
-            $banques = Banque::where('cree_par_admin', $grossiste->cree_par_admin)
-                ->where('statut', 'ACTIF')
+            $banques = Banque::where('statut', 'ACTIF')
                 ->orderBy('id_banque', 'asc')
                 ->get();
 
@@ -342,12 +290,10 @@ Route::prefix('grossiste')->name('grossiste.')->middleware(['auth:web', 'user.ty
                 ->firstOrFail();
 
             Banque::where('id_banque', $validated['id_banque'])
-                ->where('cree_par_admin', $grossiste->cree_par_admin)
                 ->where('statut', 'ACTIF')
                 ->firstOrFail();
 
             Carte::create([
-                'cree_par_admin' => $grossiste->cree_par_admin,
                 'numero_carte' => strtoupper(trim($validated['numero_carte'])),
                 'id_type_carte' => $validated['id_type_carte'],
                 'id_banque' => $validated['id_banque'],
@@ -358,6 +304,53 @@ Route::prefix('grossiste')->name('grossiste.')->middleware(['auth:web', 'user.ty
 
             return redirect()->route('grossiste.cartes.index')->with('success', 'Carte créée avec succès.');
         })->name('store');
+
+        Route::put('/{id}', function (\Illuminate\Http\Request $request, $id) {
+            $grossiste = Auth::user();
+
+            $carte = Carte::where('id_carte', $id)
+                ->where('id_grossiste', $grossiste->id_user_detail)
+                ->firstOrFail();
+
+            $validated = $request->validate([
+                'numero_carte' => ['required', 'string', 'max:20', Rule::unique('carte', 'numero_carte')->ignore($carte->id_carte, 'id_carte')],
+                'id_type_carte' => ['required', 'integer'],
+                'id_banque' => ['required', 'integer', 'exists:banque,id_banque'],
+                'date_expiration' => ['required', 'date', 'after_or_equal:today'],
+                'statut_carte' => ['required', Rule::in(['ENREGISTREE', 'ACTIVE', 'BLOQUEE', 'EXPIREE', 'ANNULEE'])],
+            ]);
+
+            TypeCarte::where('id_type_carte', $validated['id_type_carte'])
+                ->where('cree_par_admin', $grossiste->cree_par_admin)
+                ->where('statut', 'ACTIF')
+                ->firstOrFail();
+
+            Banque::where('id_banque', $validated['id_banque'])
+                ->where('statut', 'ACTIF')
+                ->firstOrFail();
+
+            $carte->update([
+                'numero_carte' => strtoupper(trim($validated['numero_carte'])),
+                'id_type_carte' => $validated['id_type_carte'],
+                'id_banque' => $validated['id_banque'],
+                'date_expiration' => $validated['date_expiration'],
+                'statut_carte' => $validated['statut_carte'],
+            ]);
+
+            return redirect()->route('grossiste.cartes.index')->with('success', 'Carte mise à jour avec succès.');
+        })->name('update');
+
+        Route::delete('/{id}', function ($id) {
+            $grossiste = Auth::user();
+
+            $carte = Carte::where('id_carte', $id)
+                ->where('id_grossiste', $grossiste->id_user_detail)
+                ->firstOrFail();
+
+            $carte->delete();
+
+            return redirect()->route('grossiste.cartes.index')->with('success', 'Carte supprimée avec succès.');
+        })->name('destroy');
     });
 
     // Gestion des Partenaires
